@@ -41,4 +41,4 @@ REPOSITORIO_FINAL_INTEGRADOR/
 ├── requirements.py                        # Lista de librerias entre ellas ( Django==6.1.3; numpy==2.5.4;pandas==3.1.0 )
 └── README.md
 
-Contacto : Roberto Ulloa ( Provincia de Mendoza - cel 2616957)
+Contacto : Roberto Ulloa ( Provincia de Mendoza - cel 2616957xx)
