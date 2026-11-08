@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Sustentabilidad | Ecotech Solutions</title>
+    <!-- Chart.js para los gráficos interactivos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Plugin para mostrar los porcentajes dentro del gráfico de torta -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <style>
+        :root {
+            --primary-color: #0f766e;
+            --primary-hover: #115e59;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Encabezado Profesional */
+        .header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin: 0 0 5px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h2 {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* Tarjetas de Contenedores estilo Dashboard */
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* Métricas Globales en Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .metric-item {
+            background: #f1f5f9;
+            padding: 15px 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .metric-item p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .metric-item h4 {
+            margin: 5px 0 0 0;
+            font-size: 1.3rem;
+            color: var(--text-main);
+        }
+
+        /* Tabla Profesional de Resumen */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tbody tr {
+            transition: background-color 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+
+        /* Gráficos Organizados */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            align-items: center;
+        }
+
+        .chart-box {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .chart-box h4 {
+            margin: 0 0 15px 0;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 350px;
+            position: relative;
+        }
+
+        .chart-container-small {
+            width: 100%;
+            max-width: 240px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Encabezado -->
+        <div class="header">
+            <h1>PANEL DE SUSTENTABILIDAD DE ECOTECH SOLUTIONS</h1>
+            <h2>RESUMEN DE LAS EMISIONES</h2>
+        </div>
+
+        <!-- Métricas Generales -->
+        <div class="card">
+            <h3>Indicadores Globales</h3>
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <p>Total Global de Emisiones</p>
+                    <h4>{{ total_emisión }} kg CO₂e</h4>
+                </div>
+                <div class="metric-item">
+                    <p>Planta con Mayor Consumo</p>
+                    <h4>{{ planta_mayor_consumo }}</h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desglose por Planta (Tabla Principal) -->
+        <div class="card">
+            <h3>Desglose Detallado por Planta</h3>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Planta Operativa</th>
+                            <th>Emisiones Registradas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for planta, emision in emision_por_planta.items %}
+                            <tr>
+                                <td><strong>{{ planta }}</strong></td>
+                                <td>{{ emision }} kg CO₂e</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sección de Gráficos Estadísticos -->
+        <div class="card">
+            <h3>Análisis Visual y Estadístico</h3>
+            <div class="charts-grid">
+                <!-- Gráfico de Barras por Planta -->
+                <div class="chart-box">
+                    <h4>Comparativa por Planta (Barras)</h4>
+                    <div class="chart-container">
+                        <canvas id="barrasChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Líneas -->
+                <div class="chart-box">
+                    <h4>Tendencia de Emisiones</h4>
+                    <div class="chart-container">
+                        <canvas id="lineaChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Gráfico de Torta -->
+                <div class="chart-box">
+                    <h4>Distribución Porcentual</h4>
+                    <div class="chart-container-small">
+                        <canvas id="tortaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Script de configuración de Chart.js -->
+    <script>
+        const datosPlanta = {{ emision_por_planta|safe }};
+        const labels = Object.keys(datosPlanta);
+        const valores = Object.values(datosPlanta);
+
+        const corporateColors = [
+            'rgba(15, 118, 110, 0.8)',
+            'rgba(14, 165, 233, 0.8)',
+            'rgba(245, 158, 11, 0.8)',
+            'rgba(139, 92, 246, 0.8)',
+            'rgba(236, 72, 153, 0.8)'
+        ];
+
+        const corporateBorders = [
+            'rgba(15, 118, 110, 1)',
+            'rgba(14, 165, 233, 1)',
+            'rgba(245, 158, 11, 1)',
+            'rgba(139, 92, 246, 1)',
+            'rgba(236, 72, 153, 1)'
+        ];
+
+        // 1. Gráfico de Barras
+        new Chart(document.getElementById('barrasChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'kg CO₂e',
+                    data: valores,
+                    backgroundColor: corporateColors,
+                    borderColor: corporateBorders,
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // 2. Gráfico de Líneas
+        new Chart(document.getElementById('lineaChart').getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Tendencia',
+                    data: valores,
+                    borderColor: '#0f766e',
+                    backgroundColor: 'rgba(15, 118, 110, 0.1)',
+                    borderWidth: 2.5,
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // 3. Gráfico de Torta
+        new Chart(document.getElementById('tortaChart').getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: valores,
+                    backgroundColor: corporateColors,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 12, font: { size: 11 } }
+                    },
+                    datalabels: {
+                        color: '#fff',
+                        font: { weight: 'bold', size: 11 },
+                        formatter: (value, ctx) => {
+                            let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                            return (value * 100 / sum).toFixed(1) + "%";
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    </script>
+
+</body>
+</html>
